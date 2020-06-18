@@ -146,7 +146,12 @@ public class MainActivity extends AppCompatActivity {
                     activity.setState(State.Disconnected);
                     break;
                 case Agent.MSG_RECEIVED:
-                    activity.showMessage((ChatMessage) msg.obj);
+                    ChatMessage message = (ChatMessage) msg.obj;
+                    Log.d(TAG, "Sound: " + Integer.toString(message.sound));
+                    if (message.sound == 0) {
+                        activity.showMessage(message);
+                    }
+                    activity.soundPlayer.playConnected();
                     break;
             }
         }
@@ -230,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         }
         messageSeq++;
         long time = System.currentTimeMillis();
-        ChatMessage message = new ChatMessage(messageSeq, time, content, adapter.getName());
+        ChatMessage message = new ChatMessage(messageSeq, time, content, adapter.getName(), 0);
         agent.send(message);
         chatLogAdapter.add(message);
         chatLogAdapter.notifyDataSetChanged();
